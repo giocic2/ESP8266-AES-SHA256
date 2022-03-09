@@ -1,0 +1,5 @@
+Wikipedia: https://en.wikipedia.org/wiki/Secure_Hash_Algorithm
+Youtube: https://youtu.be/DMtFhACPnTY
+Dimostratore online: https://emn178.github.io/online-tools/sha256.html
+Takes some string and it turns it into some fixed length binary string (digest).
+Purpose: if we change the message just slightly, the digest becomes totally different.

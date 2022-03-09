@@ -1,0 +1,4 @@
+https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
+Youtube: https://youtu.be/O4xNJsjtN6E
+Dimostratore online: https://www.devglan.com/online-tools/aes-encryption-decryption
+Algoritmo di cifratura a blocchi a chiave simmetrica.
