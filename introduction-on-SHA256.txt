@@ -1,5 +1,11 @@
 Wikipedia: https://en.wikipedia.org/wiki/Secure_Hash_Algorithm
-Youtube: https://youtu.be/DMtFhACPnTY
-Dimostratore online: https://emn178.github.io/online-tools/sha256.html
+Online demostrator: https://emn178.github.io/online-tools/sha256.html
+How it works (Computerphile): https://youtu.be/DMtFhACPnTY
+Difference between encryption and hashing (Professor Sluiter): https://www.youtube.com/watch?v=GI790E1JMgw
+SHA256 in cryptocurrency (3Blue1Brown): https://youtu.be/S9JGmA5_unY
+------------------------------------------------------
+SHA256 is a hashing algorithm.
 Takes some string and it turns it into some fixed length binary string (digest).
 Purpose: if we change the message just slightly, the digest becomes totally different.
+However, it is theoretically possible (but very very unlikely) that a so called "hash collision" happens, meaning that two different strings produce the same digest. The longer the digest, the less likely hash collision is.
+Hashing algorithms are also used to encrypt passwords, so that are not stored in clear format and this techniques has its own flaws (but this is off-topic for this project).

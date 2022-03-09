@@ -1,4 +1,6 @@
 Wikipedia: https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
-Youtube: https://youtu.be/O4xNJsjtN6E
-Dimostratore online: https://www.devglan.com/online-tools/aes-encryption-decryption
-Algoritmo di cifratura a blocchi a chiave simmetrica.
+Online demonstrator: https://www.devglan.com/online-tools/aes-encryption-decryption
+How it works (Compputerphile): https://youtu.be/O4xNJsjtN6E
+How it works (Professor Sluiter): https://www.youtube.com/watch?v=lnKPoWZnNNM
+------------------------------------------------------
+AES is a symmetric-key encryption algorithm.
