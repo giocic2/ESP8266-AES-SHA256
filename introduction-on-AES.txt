@@ -1,6 +1,8 @@
 Wikipedia: https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
 Online demonstrator: https://www.devglan.com/online-tools/aes-encryption-decryption
-How it works (Compputerphile): https://youtu.be/O4xNJsjtN6E
+How it works (Computerphile): https://youtu.be/O4xNJsjtN6E
 How it works (Professor Sluiter): https://www.youtube.com/watch?v=lnKPoWZnNNM
+Block ciphers mode of operation (Computerhile): https://youtu.be/Rk0NIQfEXBA
 ------------------------------------------------------
 AES is a symmetric-key encryption algorithm.
+Block ciphers have different modes of operation. In this code is implemented ECB, CBC, CTR and CCM. Da Wikipedia, la più indicata sembra essere CTR.
