@@ -231,7 +231,7 @@ void xor_buf(const BYTE in[], BYTE out[], size_t len)
 /*******************
 * AES - CBC
 *******************/
-int aes_encrypt_cbc(const BYTE in[], size_t in_len, BYTE out[], const WORD key[], int keysize, const BYTE iv[])
+int aes_en_crypt_cbc(const BYTE in[], size_t in_len, BYTE out[], const WORD key[], int keysize, const BYTE iv[])
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
 	int blocks, idx;
@@ -246,7 +246,7 @@ int aes_encrypt_cbc(const BYTE in[], size_t in_len, BYTE out[], const WORD key[]
 	for (idx = 0; idx < blocks; idx++) {
 		memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
 		xor_buf(iv_buf, buf_in, AES_BLOCK_SIZE);
-		aes_encrypt(buf_in, buf_out, key, keysize);
+		aes_en_crypt(buf_in, buf_out, key, keysize);
 		memcpy(&out[idx * AES_BLOCK_SIZE], buf_out, AES_BLOCK_SIZE);
 		memcpy(iv_buf, buf_out, AES_BLOCK_SIZE);
 	}
@@ -254,7 +254,7 @@ int aes_encrypt_cbc(const BYTE in[], size_t in_len, BYTE out[], const WORD key[]
 	return(TRUE);
 }
 
-int aes_encrypt_cbc_mac(const BYTE in[], size_t in_len, BYTE out[], const WORD key[], int keysize, const BYTE iv[])
+int aes_en_crypt_cbc_mac(const BYTE in[], size_t in_len, BYTE out[], const WORD key[], int keysize, const BYTE iv[])
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
 	int blocks, idx;
@@ -269,7 +269,7 @@ int aes_encrypt_cbc_mac(const BYTE in[], size_t in_len, BYTE out[], const WORD k
 	for (idx = 0; idx < blocks; idx++) {
 		memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
 		xor_buf(iv_buf, buf_in, AES_BLOCK_SIZE);
-		aes_encrypt(buf_in, buf_out, key, keysize);
+		aes_en_crypt(buf_in, buf_out, key, keysize);
 		memcpy(iv_buf, buf_out, AES_BLOCK_SIZE);
 		// Do not output all encrypted blocks.
 	}
@@ -279,7 +279,7 @@ int aes_encrypt_cbc_mac(const BYTE in[], size_t in_len, BYTE out[], const WORD k
 	return(TRUE);
 }
 
-int aes_decrypt_cbc(const BYTE in[], size_t in_len, BYTE out[], const WORD key[], int keysize, const BYTE iv[])
+int aes_de_crypt_cbc(const BYTE in[], size_t in_len, BYTE out[], const WORD key[], int keysize, const BYTE iv[])
 {
 	BYTE buf_in[AES_BLOCK_SIZE], buf_out[AES_BLOCK_SIZE], iv_buf[AES_BLOCK_SIZE];
 	int blocks, idx;
@@ -293,7 +293,7 @@ int aes_decrypt_cbc(const BYTE in[], size_t in_len, BYTE out[], const WORD key[]
 
 	for (idx = 0; idx < blocks; idx++) {
 		memcpy(buf_in, &in[idx * AES_BLOCK_SIZE], AES_BLOCK_SIZE);
-		aes_decrypt(buf_in, buf_out, key, keysize);
+		aes_de_crypt(buf_in, buf_out, key, keysize);
 		xor_buf(iv_buf, buf_out, AES_BLOCK_SIZE);
 		memcpy(&out[idx * AES_BLOCK_SIZE], buf_out, AES_BLOCK_SIZE);
 		memcpy(iv_buf, buf_in, AES_BLOCK_SIZE);
@@ -319,7 +319,7 @@ void increment_iv(BYTE iv[], int counter_size)
 
 // Performs the encryption in-place, the input and output buffers may be the same.
 // Input may be an arbitrary length (in bytes).
-void aes_encrypt_ctr(const BYTE in[], size_t in_len, BYTE out[], const WORD key[], int keysize, const BYTE iv[])
+void aes_en_crypt_ctr(const BYTE in[], size_t in_len, BYTE out[], const WORD key[], int keysize, const BYTE iv[])
 {
 	size_t idx = 0, last_block_length;
 	BYTE iv_buf[AES_BLOCK_SIZE], out_buf[AES_BLOCK_SIZE];
@@ -332,27 +332,27 @@ void aes_encrypt_ctr(const BYTE in[], size_t in_len, BYTE out[], const WORD key[
 
 	if (in_len > AES_BLOCK_SIZE) {
 		for (idx = 0; idx < last_block_length; idx += AES_BLOCK_SIZE) {
-			aes_encrypt(iv_buf, out_buf, key, keysize);
+			aes_en_crypt(iv_buf, out_buf, key, keysize);
 			xor_buf(out_buf, &out[idx], AES_BLOCK_SIZE);
 			increment_iv(iv_buf, AES_BLOCK_SIZE);
 		}
 	}
 
-	aes_encrypt(iv_buf, out_buf, key, keysize);
+	aes_en_crypt(iv_buf, out_buf, key, keysize);
 	xor_buf(out_buf, &out[idx], in_len - idx);   // Use the Most Significant bytes.
 }
 
-void aes_decrypt_ctr(const BYTE in[], size_t in_len, BYTE out[], const WORD key[], int keysize, const BYTE iv[])
+void aes_de_crypt_ctr(const BYTE in[], size_t in_len, BYTE out[], const WORD key[], int keysize, const BYTE iv[])
 {
 	// CTR encryption is its own inverse function.
-	aes_encrypt_ctr(in, in_len, out, key, keysize, iv);
+	aes_en_crypt_ctr(in, in_len, out, key, keysize, iv);
 }
 
 /*******************
 * AES - CCM
 *******************/
 // out_len = payload_len + assoc_len
-int aes_encrypt_ccm(const BYTE payload[], WORD payload_len, const BYTE assoc[], unsigned short assoc_len,
+int aes_en_crypt_ccm(const BYTE payload[], WORD payload_len, const BYTE assoc[], unsigned short assoc_len,
                     const BYTE nonce[], unsigned short nonce_len, BYTE out[], WORD *out_len,
                     WORD mac_len, const BYTE key_str[], int keysize)
 {
@@ -393,7 +393,7 @@ int aes_encrypt_ccm(const BYTE payload[], WORD payload_len, const BYTE assoc[], 
 
 	// Perform the CBC operation with an IV of zeros on the formatted buffer to calculate the MAC.
 	memset(temp_iv, 0, AES_BLOCK_SIZE);
-	aes_encrypt_cbc_mac(buf, end_of_buf, mac, key, keysize, temp_iv);
+	aes_en_crypt_cbc_mac(buf, end_of_buf, mac, key, keysize, temp_iv);
 
 	// Copy the Payload and MAC to the output buffer.
 	memcpy(out, payload, payload_len);
@@ -402,10 +402,10 @@ int aes_encrypt_ccm(const BYTE payload[], WORD payload_len, const BYTE assoc[], 
 	// Encrypt the Payload with CTR mode with a counter starting at 1.
 	memcpy(temp_iv, counter, AES_BLOCK_SIZE);
 	increment_iv(temp_iv, AES_BLOCK_SIZE - 1 - mac_len);   // Last argument is the byte size of the counting portion of the counter block. /*BUG?*/
-	aes_encrypt_ctr(out, payload_len, out, key, keysize, temp_iv);
+	aes_en_crypt_ctr(out, payload_len, out, key, keysize, temp_iv);
 
 	// Encrypt the MAC with CTR mode with a counter starting at 0.
-	aes_encrypt_ctr(&out[payload_len], mac_len, &out[payload_len], key, keysize, counter);
+	aes_en_crypt_ctr(&out[payload_len], mac_len, &out[payload_len], key, keysize, counter);
 
 	free(buf);
 	*out_len = payload_len + mac_len;
@@ -415,7 +415,7 @@ int aes_encrypt_ccm(const BYTE payload[], WORD payload_len, const BYTE assoc[], 
 
 // plaintext_len = ciphertext_len - mac_len
 // Needs a flag for whether the MAC matches.
-int aes_decrypt_ccm(const BYTE ciphertext[], WORD ciphertext_len, const BYTE assoc[], unsigned short assoc_len,
+int aes_de_crypt_ccm(const BYTE ciphertext[], WORD ciphertext_len, const BYTE assoc[], unsigned short assoc_len,
                     const BYTE nonce[], unsigned short nonce_len, BYTE plaintext[], WORD *plaintext_len,
                     WORD mac_len, int *mac_auth, const BYTE key_str[], int keysize)
 {
@@ -445,12 +445,12 @@ int aes_decrypt_ccm(const BYTE ciphertext[], WORD ciphertext_len, const BYTE ass
 	// Decrypt the Payload with CTR mode with a counter starting at 1.
 	memcpy(temp_iv, counter, AES_BLOCK_SIZE);
 	increment_iv(temp_iv, AES_BLOCK_SIZE - 1 - mac_len);   // (AES_BLOCK_SIZE - 1 - mac_len) is the byte size of the counting portion of the counter block.
-	aes_decrypt_ctr(plaintext, *plaintext_len, plaintext, key, keysize, temp_iv);
+	aes_de_crypt_ctr(plaintext, *plaintext_len, plaintext, key, keysize, temp_iv);
 
 	// Setting mac_auth to NULL disables the authentication check.
 	if (mac_auth != NULL) {
 		// Decrypt the MAC with CTR mode with a counter starting at 0.
-		aes_decrypt_ctr(mac, mac_len, mac, key, keysize, counter);
+		aes_de_crypt_ctr(mac, mac_len, mac, key, keysize, counter);
 
 		// Format the first block of the formatted data.
 		plaintext_len_store_size = AES_BLOCK_SIZE - 1 - nonce_len;
@@ -465,7 +465,7 @@ int aes_decrypt_ccm(const BYTE ciphertext[], WORD ciphertext_len, const BYTE ass
 
 		// Perform the CBC operation with an IV of zeros on the formatted buffer to calculate the MAC.
 		memset(temp_iv, 0, AES_BLOCK_SIZE);
-		aes_encrypt_cbc_mac(buf, end_of_buf, mac_buf, key, keysize, temp_iv);
+		aes_en_crypt_cbc_mac(buf, end_of_buf, mac_buf, key, keysize, temp_iv);
 
 		// Compare the calculated MAC against the MAC embedded in the ciphertext to see if they are the same.
 		if (! memcmp(mac, mac_buf, mac_len)) {
@@ -926,7 +926,7 @@ void InvMixColumns(BYTE state[][4])
 // (En/De)Crypt
 /////////////////
 
-void aes_encrypt(const BYTE in[], BYTE out[], const WORD key[], int keysize)
+void aes_en_crypt(const BYTE in[], BYTE out[], const WORD key[], int keysize)
 {
 	BYTE state[4][4];
 
@@ -999,7 +999,7 @@ void aes_encrypt(const BYTE in[], BYTE out[], const WORD key[], int keysize)
 	out[15] = state[3][3];
 }
 
-void aes_decrypt(const BYTE in[], BYTE out[], const WORD key[], int keysize)
+void aes_de_crypt(const BYTE in[], BYTE out[], const WORD key[], int keysize)
 {
 	BYTE state[4][4];
 

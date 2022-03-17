@@ -28,12 +28,12 @@ void aes_key_setup(const BYTE key[],          // The key, must be 128, 192, or 2
                    WORD w[],                  // Output key schedule to be used later
                    int keysize);              // Bit length of the key, 128, 192, or 256
 
-void aes_encrypt(const BYTE in[],             // 16 bytes of plaintext
+void aes_en_crypt(const BYTE in[],             // 16 bytes of plaintext
                  BYTE out[],                  // 16 bytes of ciphertext
                  const WORD key[],            // From the key setup
                  int keysize);                // Bit length of the key, 128, 192, or 256
 
-void aes_decrypt(const BYTE in[],             // 16 bytes of ciphertext
+void aes_de_crypt(const BYTE in[],             // 16 bytes of ciphertext
                  BYTE out[],                  // 16 bytes of plaintext
                  const WORD key[],            // From the key setup
                  int keysize);                // Bit length of the key, 128, 192, or 256
@@ -41,7 +41,7 @@ void aes_decrypt(const BYTE in[],             // 16 bytes of ciphertext
 ///////////////////
 // AES - CBC
 ///////////////////
-int aes_encrypt_cbc(const BYTE in[],          // Plaintext
+int aes_en_crypt_cbc(const BYTE in[],          // Plaintext
                     size_t in_len,            // Must be a multiple of AES_BLOCK_SIZE
                     BYTE out[],               // Ciphertext, same length as plaintext
                     const WORD key[],         // From the key setup
@@ -49,7 +49,7 @@ int aes_encrypt_cbc(const BYTE in[],          // Plaintext
                     const BYTE iv[]);         // IV, must be AES_BLOCK_SIZE bytes long
 
 // Only output the CBC-MAC of the input.
-int aes_encrypt_cbc_mac(const BYTE in[],      // plaintext
+int aes_en_crypt_cbc_mac(const BYTE in[],      // plaintext
                         size_t in_len,        // Must be a multiple of AES_BLOCK_SIZE
                         BYTE out[],           // Output MAC
                         const WORD key[],     // From the key setup
@@ -62,14 +62,14 @@ int aes_encrypt_cbc_mac(const BYTE in[],      // plaintext
 void increment_iv(BYTE iv[],                  // Must be a multiple of AES_BLOCK_SIZE
                   int counter_size);          // Bytes of the IV used for counting (low end)
 
-void aes_encrypt_ctr(const BYTE in[],         // Plaintext
+void aes_en_crypt_ctr(const BYTE in[],         // Plaintext
                      size_t in_len,           // Any byte length
                      BYTE out[],              // Ciphertext, same length as plaintext
                      const WORD key[],        // From the key setup
                      int keysize,             // Bit length of the key, 128, 192, or 256
                      const BYTE iv[]);        // IV, must be AES_BLOCK_SIZE bytes long
 
-void aes_decrypt_ctr(const BYTE in[],         // Ciphertext
+void aes_de_crypt_ctr(const BYTE in[],         // Ciphertext
                      size_t in_len,           // Any byte length
                      BYTE out[],              // Plaintext, same length as ciphertext
                      const WORD key[],        // From the key setup
@@ -80,7 +80,7 @@ void aes_decrypt_ctr(const BYTE in[],         // Ciphertext
 // AES - CCM
 ///////////////////
 // Returns True if the input parameters do not violate any constraint.
-int aes_encrypt_ccm(const BYTE plaintext[],              // IN  - Plaintext.
+int aes_en_crypt_ccm(const BYTE plaintext[],              // IN  - Plaintext.
                     WORD plaintext_len,                  // IN  - Plaintext length.
                     const BYTE associated_data[],        // IN  - Associated Data included in authentication, but not encryption.
                     unsigned short associated_data_len,  // IN  - Associated Data length in bytes.
@@ -98,7 +98,7 @@ int aes_encrypt_ccm(const BYTE plaintext[],              // IN  - Plaintext.
 // this, call with mac_auth = NULL. The proper proceedure is to decrypt with
 // authentication enabled (mac_auth != NULL) and make a second call to that
 // ignores authentication explicitly if the first call failes.
-int aes_decrypt_ccm(const BYTE ciphertext[],             // IN  - Ciphertext, the concatination of encrypted plaintext and MAC.
+int aes_de_crypt_ccm(const BYTE ciphertext[],             // IN  - Ciphertext, the concatination of encrypted plaintext and MAC.
                     WORD ciphertext_len,                 // IN  - Ciphertext length in bytes.
                     const BYTE assoc[],                  // IN  - The Associated Data, required for authentication.
                     unsigned short assoc_len,            // IN  - Associated Data length in bytes.
