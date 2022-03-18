@@ -50,14 +50,14 @@ int aes_ecb_test()
 	//print_hex(key[0], 32);
 
 	for(idx = 0; idx < 2; idx++) {
-		aes_encrypt(plaintext[idx], enc_buf, key_schedule, 256);
+		aes_en_crypt(plaintext[idx], enc_buf, key_schedule, 256);
 		//printf("\nPlaintext    : ");
 		//print_hex(plaintext[idx], 16);
 		//printf("\n-encrypted to: ");
 		//print_hex(enc_buf, 16);
 		pass = pass && !memcmp(enc_buf, ciphertext[idx], 16);
 
-		aes_decrypt(ciphertext[idx], enc_buf, key_schedule, 256);
+		aes_de_crypt(ciphertext[idx], enc_buf, key_schedule, 256);
 		//printf("\nCiphertext   : ");
 		//print_hex(ciphertext[idx], 16);
 		//printf("\n-decrypted to: ");
@@ -96,7 +96,7 @@ int aes_cbc_test()
 	//printf("\nIV           : ");
 	//print_hex(iv[0], 16);
 
-	aes_encrypt_cbc(plaintext[0], 32, enc_buf, key_schedule, 256, iv[0]);
+	aes_en_crypt_cbc(plaintext[0], 32, enc_buf, key_schedule, 256, iv[0]);
 	//printf("\nPlaintext    : ");
 	//print_hex(plaintext[0], 32);
 	//printf("\n-encrypted to: ");
@@ -105,7 +105,7 @@ int aes_cbc_test()
 	//print_hex(ciphertext[0], 32);
 	pass = pass && !memcmp(enc_buf, ciphertext[0], 32);
 
-	aes_decrypt_cbc(ciphertext[0], 32, enc_buf, key_schedule, 256, iv[0]);
+	aes_de_crypt_cbc(ciphertext[0], 32, enc_buf, key_schedule, 256, iv[0]);
 	//printf("\nCiphertext   : ");
 	//print_hex(ciphertext[0], 32);
 	//printf("\n-decrypted to: ");
@@ -144,14 +144,14 @@ int aes_ctr_test()
 	//printf("\nIV           : ");
 	//print_hex(iv[0], 16);
 
-	aes_encrypt_ctr(plaintext[0], 32, enc_buf, key_schedule, 256, iv[0]);
+	aes_en_crypt_ctr(plaintext[0], 32, enc_buf, key_schedule, 256, iv[0]);
 	//printf("\nPlaintext    : ");
 	//print_hex(plaintext[0], 32);
 	//printf("\n-encrypted to: ");
 	//print_hex(enc_buf, 32);
 	pass = pass && !memcmp(enc_buf, ciphertext[0], 32);
 
-	aes_decrypt_ctr(ciphertext[0], 32, enc_buf, key_schedule, 256, iv[0]);
+	aes_de_crypt_ctr(ciphertext[0], 32, enc_buf, key_schedule, 256, iv[0]);
 	//printf("\nCiphertext   : ");
 	//print_hex(ciphertext[0], 32);
 	//printf("\n-decrypted to: ");
@@ -202,7 +202,7 @@ int aes_ccm_test()
 	//print_hex(iv[0], 7);
 	//print_hex(key[0], 16);
 
-	aes_encrypt_ccm(plaintext[0], 4, assoc[0], 8, iv[0], 7, enc_buf, &enc_buf_len, 4, key[0], 128);
+	aes_en_crypt_ccm(plaintext[0], 4, assoc[0], 8, iv[0], 7, enc_buf, &enc_buf_len, 4, key[0], 128);
 	//printf("\nNONCE        : ");
 	//print_hex(iv[0], 7);
 	//printf("\nAssoc. Data  : ");
@@ -213,7 +213,7 @@ int aes_ccm_test()
 	//print_hex(enc_buf, enc_buf_len);
 	pass = pass && !memcmp(enc_buf, ciphertext[0], enc_buf_len);
 
-	aes_decrypt_ccm(ciphertext[0], 8, assoc[0], 8, iv[0], 7, enc_buf, &enc_buf_len, 4, &mac_auth, key[0], 128);
+	aes_de_crypt_ccm(ciphertext[0], 8, assoc[0], 8, iv[0], 7, enc_buf, &enc_buf_len, 4, &mac_auth, key[0], 128);
 	//printf("\n-Ciphertext  : ");
 	//print_hex(ciphertext[0], 8);
 	//printf("\n-decrypted to: ");
@@ -222,7 +222,7 @@ int aes_ccm_test()
 	pass = pass && !memcmp(enc_buf, plaintext[0], enc_buf_len) && mac_auth;
 
 
-	aes_encrypt_ccm(plaintext[1], 16, assoc[1], 16, iv[1], 8, enc_buf, &enc_buf_len, 6, key[0], 128);
+	aes_en_crypt_ccm(plaintext[1], 16, assoc[1], 16, iv[1], 8, enc_buf, &enc_buf_len, 6, key[0], 128);
 	//printf("\n\nNONCE        : ");
 	//print_hex(iv[1], 8);
 	//printf("\nAssoc. Data  : ");
@@ -233,7 +233,7 @@ int aes_ccm_test()
 	//print_hex(enc_buf, enc_buf_len);
 	pass = pass && !memcmp(enc_buf, ciphertext[1], enc_buf_len);
 
-	aes_decrypt_ccm(ciphertext[1], 22, assoc[1], 16, iv[1], 8, enc_buf, &enc_buf_len, 6, &mac_auth, key[0], 128);
+	aes_de_crypt_ccm(ciphertext[1], 22, assoc[1], 16, iv[1], 8, enc_buf, &enc_buf_len, 6, &mac_auth, key[0], 128);
 	//printf("\n-Ciphertext  : ");
 	//print_hex(ciphertext[1], 22);
 	//printf("\n-decrypted to: ");
@@ -242,7 +242,7 @@ int aes_ccm_test()
 	pass = pass && !memcmp(enc_buf, plaintext[1], enc_buf_len) && mac_auth;
 
 
-	aes_encrypt_ccm(plaintext[2], 24, assoc[2], 20, iv[2], 12, enc_buf, &enc_buf_len, 8, key[0], 128);
+	aes_en_crypt_ccm(plaintext[2], 24, assoc[2], 20, iv[2], 12, enc_buf, &enc_buf_len, 8, key[0], 128);
 	//printf("\n\nNONCE        : ");
 	//print_hex(iv[2], 12);
 	//printf("\nAssoc. Data  : ");
@@ -253,7 +253,7 @@ int aes_ccm_test()
 	//print_hex(enc_buf, enc_buf_len);
 	pass = pass && !memcmp(enc_buf, ciphertext[2], enc_buf_len);
 
-	aes_decrypt_ccm(ciphertext[2], 32, assoc[2], 20, iv[2], 12, enc_buf, &enc_buf_len, 8, &mac_auth, key[0], 128);
+	aes_de_crypt_ccm(ciphertext[2], 32, assoc[2], 20, iv[2], 12, enc_buf, &enc_buf_len, 8, &mac_auth, key[0], 128);
 	//printf("\n-Ciphertext  : ");
 	//print_hex(ciphertext[2], 32);
 	//printf("\n-decrypted to: ");
